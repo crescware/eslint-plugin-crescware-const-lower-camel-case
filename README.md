@@ -7,12 +7,13 @@ support.
 
 ## Rule: `crescware-const-lower-camel-case/const-lower-camel-case`
 
-Every identifier introduced by a `const` declaration must match
-`/^[a-z][a-zA-Z0-9]*$/`:
+Every identifier introduced by a `const` declaration must be lowerCamelCase:
 
 - First character is a lowercase letter.
 - The rest are letters or digits only.
-- Consecutive capitals (`getURL`) and single characters (`x`) are allowed.
+- No two consecutive uppercase letters: acronyms are treated as words, so
+  `getUrl` / `userId` are required, not `getURL` / `userID`.
+- Single characters (`x`) are allowed.
 - Underscores, a leading `$`, PascalCase (`MyConst`) and UPPER_CASE (`ANSWER`)
   are rejected.
 

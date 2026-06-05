@@ -39,7 +39,7 @@ const messagesFor = (filename: string): string[] => {
 };
 
 const expectedMessage = (name: string): string => {
-  return `Const '${name}' must be lowerCamelCase (match /^[a-z][a-zA-Z0-9]*$/).`;
+  return `Const '${name}' must be lowerCamelCase (start lowercase, no underscores, no consecutive uppercase).`;
 };
 
 beforeAll(() => {
@@ -54,7 +54,7 @@ describe("OK fixtures produce no false positives", () => {
   test.each([
     "ok-simple.ts",
     "ok-single-char.ts",
-    "ok-consecutive-caps.ts",
+    "ok-acronym-as-word.ts",
     "ok-digits.ts",
     "ok-object-destructure.ts",
     "ok-array-destructure.ts",
@@ -85,6 +85,13 @@ describe("NG fixtures match exactly", () => {
   test("ng-upper-snake.ts", () => {
     expect(messagesFor("ng-upper-snake.ts")).toEqual([
       expectedMessage("MAX_COUNT"),
+    ]);
+  });
+
+  test("ng-acronym.ts (consecutive uppercase rejected)", () => {
+    expect(messagesFor("ng-acronym.ts")).toEqual([
+      expectedMessage("getURL"),
+      expectedMessage("userID"),
     ]);
   });
 
@@ -163,7 +170,7 @@ describe("Totals", () => {
     expect(okMessages).toEqual([]);
   });
 
-  test("exactly 16 diagnostics across all NG fixtures", () => {
-    expect(allDiagnostics.length).toBe(16);
+  test("exactly 18 diagnostics across all NG fixtures", () => {
+    expect(allDiagnostics.length).toBe(18);
   });
 });

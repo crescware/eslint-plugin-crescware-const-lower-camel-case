@@ -32,10 +32,17 @@ type Rule = {
   create: (context: RuleContext) => Visitor;
 };
 
-// lowerCamelCase: first char lowercase, then letters/digits only. Allows
-// consecutive capitals (getURL) and a single char (x); forbids underscores,
-// a leading "$", PascalCase (MyConst) and UPPER_CASE (ANSWER).
+// lowerCamelCase: starts with a lowercase letter, then letters/digits only,
+// and has no two consecutive uppercase letters. Acronyms are treated as words
+// (getUrl / userId are required, not getURL / userID). A single char (x) is
+// allowed; underscores, a leading "$", PascalCase (MyConst) and UPPER_CASE
+// (ANSWER) are rejected.
 const lowerCamelPattern = /^[a-z][a-zA-Z0-9]*$/;
+const consecutiveUpperPattern = /[A-Z]{2}/;
+
+const isLowerCamelCase = (name: string): boolean => {
+  return lowerCamelPattern.test(name) && !consecutiveUpperPattern.test(name);
+};
 
 const collectPatternIdentifiers = (node: Pattern | null): Identifier[] => {
   if (node === null) {
@@ -88,11 +95,11 @@ const rule: Rule = {
         collectPatternIdentifiers(declarator.id),
       );
       for (const identifier of identifiers) {
-        if (lowerCamelPattern.test(identifier.name)) {
+        if (isLowerCamelCase(identifier.name)) {
           continue;
         }
         context.report({
-          message: `Const '${identifier.name}' must be lowerCamelCase (match /^[a-z][a-zA-Z0-9]*$/).`,
+          message: `Const '${identifier.name}' must be lowerCamelCase (start lowercase, no underscores, no consecutive uppercase).`,
           node: identifier,
         });
       }
