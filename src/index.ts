@@ -33,11 +33,13 @@ type Rule = {
 };
 
 // lowerCamelCase: starts with a lowercase letter, then letters/digits only,
-// and has no two consecutive uppercase letters. Acronyms are treated as words
-// (getUrl / userId are required, not getURL / userID). A single char (x) is
-// allowed; underscores, a leading "$", PascalCase (MyConst) and UPPER_CASE
-// (ANSWER) are rejected.
-const lowerCamelPattern = /^[a-z][a-zA-Z0-9]*$/;
+// with an optional single trailing "$", and has no two consecutive uppercase
+// letters. Acronyms are treated as words (getUrl / userId are required, not
+// getURL / userID). A single char (x) is allowed; a trailing "$" (form$) is
+// allowed for valibot-style schema variables. Underscores, a leading "$", a
+// "$" in the middle (foo$bar), consecutive "$" (foo$$), PascalCase (MyConst)
+// and UPPER_CASE (ANSWER) are rejected.
+const lowerCamelPattern = /^[a-z][a-zA-Z0-9]*\$?$/;
 const consecutiveUpperPattern = /[A-Z]{2}/;
 
 const isLowerCamelCase = (name: string): boolean => {
@@ -82,7 +84,7 @@ const rule: Rule = {
     type: "suggestion",
     docs: {
       description:
-        "Require every const declaration binding to be named in lowerCamelCase.",
+        "Require every const declaration binding to be named in lowerCamelCase, optionally with a single trailing '$' (matching /^[a-z][a-zA-Z0-9]*\\$?$/).",
     },
     schema: [],
   },
@@ -99,7 +101,7 @@ const rule: Rule = {
           continue;
         }
         context.report({
-          message: `Const '${identifier.name}' must be lowerCamelCase (start lowercase, no underscores, no consecutive uppercase).`,
+          message: `Const '${identifier.name}' must be lowerCamelCase, with an optional single trailing '$' (start lowercase, no underscores, no consecutive uppercase; match /^[a-z][a-zA-Z0-9]*\\$?$/).`,
           node: identifier,
         });
       }
