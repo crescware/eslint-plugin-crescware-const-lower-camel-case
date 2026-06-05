@@ -1,23 +1,26 @@
-# @crescware/eslint-plugin-crescware-const-lower-camel-case
+# @crescware/eslint-plugin-crescware-const-no-upper-snake-case
 
-ESLint plugin that requires every `const` declaration binding to be named in
-lowerCamelCase. It ships as a standard ESLint plugin and is dogfooded on its
-own source through [oxlint](https://oxc.rs/docs/guide/usage/linter)'s JS plugin
-support.
+ESLint plugin that forbids `const` declaration bindings named in
+SCREAMING_SNAKE_CASE. lowerCamelCase is preferred and PascalCase is allowed for
+components and classes. It ships as a standard ESLint plugin and is dogfooded on
+its own source through [oxlint](https://oxc.rs/docs/guide/usage/linter)'s JS
+plugin support.
 
-## Rule: `crescware-const-lower-camel-case/const-lower-camel-case`
+## Rule: `crescware-const-no-upper-snake-case/const-no-upper-snake-case`
 
-Every identifier introduced by a `const` declaration must be lowerCamelCase:
+Only SCREAMING_SNAKE_CASE binding names are rejected. A name is rejected when
+every character is an uppercase letter, a digit or an underscore and the first
+character is an uppercase letter — that is, it contains no lowercase letter at
+all:
 
-- First character is a lowercase letter.
-- The rest are letters or digits only.
-- No two consecutive uppercase letters: acronyms are treated as words, so
-  `getUrl` / `userId` are required, not `getURL` / `userID`.
-- Single characters (`x`) are allowed.
-- A single trailing `$` is allowed (`form$`, `courseCategories$`) for
-  valibot-style schema variables.
-- Underscores, a leading `$`, a `$` in the middle (`foo$bar`), consecutive `$`
-  (`foo$$`), PascalCase (`MyConst`) and UPPER_CASE (`ANSWER`) are rejected.
+- Rejected: `NAME_MAX_LENGTH`, `ERROR_KEY`, `ANSWER`, `URL`, and a single
+  uppercase letter such as `X`.
+- Allowed: lowerCamelCase (`fooBar`, `getUrl`) and PascalCase (`Foo`,
+  `BazComponent`, `QuxContext`) for components and classes.
+- A leading underscore (`_keys`, `_`) is allowed: the first character is not an
+  uppercase letter.
+- Any name containing at least one lowercase letter is allowed, because the
+  rejection pattern admits no lowercase character.
 
 ### What is checked
 
@@ -36,28 +39,29 @@ Every binding introduced by a `const` declaration, including:
 parameters and import bindings are out of scope.
 
 ```ts
-const myValue = 1; // ok
-const my_value = 1; // error: must be lowerCamelCase
-const { user_id } = resp; // error on `user_id`
-let snake_case = 1; // ok (not a const)
+const fooBar = 1; // ok (lowerCamelCase)
+const Foo = 1; // ok (PascalCase, e.g. a component or class)
+const ANSWER = 1; // error: must not be SCREAMING_SNAKE_CASE
+const { ERROR_KEY } = resp; // error on `ERROR_KEY`
+let LOOSE_NAME = 1; // ok (not a const)
 ```
 
 ## Usage (as a published ESLint plugin)
 
 ```sh
-pnpm add -D @crescware/eslint-plugin-crescware-const-lower-camel-case
+pnpm add -D @crescware/eslint-plugin-crescware-const-no-upper-snake-case
 ```
 
 ```js
-import constLowerCamelCase from "@crescware/eslint-plugin-crescware-const-lower-camel-case";
+import constNoUpperSnakeCase from "@crescware/eslint-plugin-crescware-const-no-upper-snake-case";
 
 export default [
   {
     plugins: {
-      "crescware-const-lower-camel-case": constLowerCamelCase,
+      "crescware-const-no-upper-snake-case": constNoUpperSnakeCase,
     },
     rules: {
-      "crescware-const-lower-camel-case/const-lower-camel-case": "error",
+      "crescware-const-no-upper-snake-case/const-no-upper-snake-case": "error",
     },
   },
 ];
@@ -80,7 +84,7 @@ export default [
   `tsconfig.build.json`.
 - `.oxlintrc.json` loads the plugin through `jsPlugins: ["./src/index.ts"]` and
   enables the rule on this repository's own source, so the plugin lints itself
-  (every `const` in `src/` is already lowerCamelCase).
+  (no `const` in `src/` is SCREAMING_SNAKE_CASE).
 - `fixtures/*.ts` are lint fixtures: `ng-*.ts` must produce diagnostics and
   `ok-*.ts` must produce none. They are linted with the separate
   `fixtures/oxlintrc.fixtures.json` (all built-in categories off, only this

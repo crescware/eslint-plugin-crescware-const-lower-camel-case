@@ -1,1 +1,0 @@
-const goodName = 1;

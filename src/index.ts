@@ -32,18 +32,16 @@ type Rule = {
   create: (context: RuleContext) => Visitor;
 };
 
-// lowerCamelCase: starts with a lowercase letter, then letters/digits only,
-// with an optional single trailing "$", and has no two consecutive uppercase
-// letters. Acronyms are treated as words (getUrl / userId are required, not
-// getURL / userID). A single char (x) is allowed; a trailing "$" (form$) is
-// allowed for valibot-style schema variables. Underscores, a leading "$", a
-// "$" in the middle (foo$bar), consecutive "$" (foo$$), PascalCase (MyConst)
-// and UPPER_CASE (ANSWER) are rejected.
-const lowerCamelPattern = /^[a-z][a-zA-Z0-9]*\$?$/;
-const consecutiveUpperPattern = /[A-Z]{2}/;
+// Forbid SCREAMING_SNAKE_CASE only: a name made entirely of uppercase letters,
+// digits and underscores, starting with an uppercase letter (NAME_MAX_LENGTH,
+// ANSWER, URL, X). Because the name must contain no lowercase letter at all,
+// PascalCase (Foo, FooBar, DropdownIndicator) and lowerCamelCase (fooBar)
+// always contain a lowercase letter and pass; a leading "_" (_keys, _) also
+// passes since the first char is not uppercase.
+const upperSnakePattern = /^[A-Z][A-Z0-9_]*$/;
 
-const isLowerCamelCase = (name: string): boolean => {
-  return lowerCamelPattern.test(name) && !consecutiveUpperPattern.test(name);
+const isUpperSnakeCase = (name: string): boolean => {
+  return upperSnakePattern.test(name);
 };
 
 const collectPatternIdentifiers = (node: Pattern | null): Identifier[] => {
@@ -84,7 +82,7 @@ const rule: Rule = {
     type: "suggestion",
     docs: {
       description:
-        "Require every const declaration binding to be named in lowerCamelCase, optionally with a single trailing '$' (matching /^[a-z][a-zA-Z0-9]*\\$?$/).",
+        "Forbid const declaration bindings named in SCREAMING_SNAKE_CASE. lowerCamelCase is preferred and PascalCase is allowed for components/classes.",
     },
     schema: [],
   },
@@ -97,11 +95,11 @@ const rule: Rule = {
         collectPatternIdentifiers(declarator.id),
       );
       for (const identifier of identifiers) {
-        if (isLowerCamelCase(identifier.name)) {
+        if (!isUpperSnakeCase(identifier.name)) {
           continue;
         }
         context.report({
-          message: `Const '${identifier.name}' must be lowerCamelCase, with an optional single trailing '$' (start lowercase, no underscores, no consecutive uppercase; match /^[a-z][a-zA-Z0-9]*\\$?$/).`,
+          message: `Const '${identifier.name}' must not be SCREAMING_SNAKE_CASE. Use lowerCamelCase (PascalCase is allowed for components/classes).`,
           node: identifier,
         });
       }
@@ -114,9 +112,9 @@ const rule: Rule = {
 };
 
 const plugin = {
-  meta: { name: "crescware-const-lower-camel-case" },
+  meta: { name: "crescware-const-no-upper-snake-case" },
   rules: {
-    "const-lower-camel-case": rule,
+    "const-no-upper-snake-case": rule,
   },
 };
 

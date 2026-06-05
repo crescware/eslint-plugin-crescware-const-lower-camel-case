@@ -1,6 +1,6 @@
 {
-  "name": "@crescware/eslint-plugin-crescware-const-lower-camel-case",
-  "version": "0.0.2",
+  "name": "@crescware/eslint-plugin-crescware-const-no-upper-snake-case",
+  "version": "0.0.3",
   "files": [
     "dist"
   ],
@@ -20,6 +20,7 @@
     "check:types": "tsgo -p tsconfig.json --noEmit",
     "exec:fixtures": "oxlint -c fixtures/oxlintrc.fixtures.json --no-ignore -f json fixtures/",
     "format": "oxlint --fix && oxfmt",
+    "prepublishOnly": "pnpm run build",
     "test": "vitest run"
   },
   "devDependencies": {
