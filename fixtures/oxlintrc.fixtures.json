@@ -11,6 +11,6 @@
   },
   "jsPlugins": ["../src/index.ts"],
   "rules": {
-    "crescware-const-lower-camel-case/const-lower-camel-case": "error"
+    "crescware-const-no-upper-snake-case/const-no-upper-snake-case": "error"
   }
 }

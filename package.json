@@ -1,6 +1,6 @@
 {
-  "name": "@crescware/eslint-plugin-crescware-const-lower-camel-case",
-  "version": "0.0.2",
+  "name": "@crescware/eslint-plugin-crescware-const-no-upper-snake-case",
+  "version": "0.0.3",
   "files": [
     "dist"
   ],

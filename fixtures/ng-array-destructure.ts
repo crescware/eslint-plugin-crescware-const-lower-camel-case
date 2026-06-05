@@ -1,1 +1,2 @@
-const [first_item, second_item] = [1, 2];
+const items = [1];
+const [FOO] = items;

@@ -17,7 +17,7 @@
     "eslint/eqeqeq": "error",
     "typescript/consistent-type-imports": "error",
     "eslint/curly": "error",
-    "crescware-const-lower-camel-case/const-lower-camel-case": "error"
+    "crescware-const-no-upper-snake-case/const-no-upper-snake-case": "error"
   },
   "ignorePatterns": ["fixtures/**"]
 }

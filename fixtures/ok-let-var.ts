@@ -1,5 +1,2 @@
-let snake_let = 1;
-snake_let += 1;
-var snake_var = 2;
-void snake_var;
-void snake_let;
+let LOOSE_NAME = 1;
+var ANOTHER_NAME = 2;
