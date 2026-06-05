@@ -1,0 +1,1 @@
+const goodName = 1;

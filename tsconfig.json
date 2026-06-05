@@ -20,5 +20,5 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false
   },
-  "include": ["src"]
+  "include": ["src", "fixtures/integration.test.ts"]
 }
