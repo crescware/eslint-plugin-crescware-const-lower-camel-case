@@ -1,11 +1,11 @@
-# @crescware/eslint-plugin-crescware-const-lower-camel-case
+# @crescware/eslint-plugin-crescware-const-no-upper-snake-case
 
 ESLint plugin that requires every `const` declaration binding to be named in
 lowerCamelCase. It ships as a standard ESLint plugin and is dogfooded on its
 own source through [oxlint](https://oxc.rs/docs/guide/usage/linter)'s JS plugin
 support.
 
-## Rule: `crescware-const-lower-camel-case/const-lower-camel-case`
+## Rule: `crescware-const-no-upper-snake-case/const-no-upper-snake-case`
 
 Every identifier introduced by a `const` declaration must be lowerCamelCase:
 
@@ -45,19 +45,19 @@ let snake_case = 1; // ok (not a const)
 ## Usage (as a published ESLint plugin)
 
 ```sh
-pnpm add -D @crescware/eslint-plugin-crescware-const-lower-camel-case
+pnpm add -D @crescware/eslint-plugin-crescware-const-no-upper-snake-case
 ```
 
 ```js
-import constLowerCamelCase from "@crescware/eslint-plugin-crescware-const-lower-camel-case";
+import constNoUpperSnakeCase from "@crescware/eslint-plugin-crescware-const-no-upper-snake-case";
 
 export default [
   {
     plugins: {
-      "crescware-const-lower-camel-case": constLowerCamelCase,
+      "crescware-const-no-upper-snake-case": constNoUpperSnakeCase,
     },
     rules: {
-      "crescware-const-lower-camel-case/const-lower-camel-case": "error",
+      "crescware-const-no-upper-snake-case/const-no-upper-snake-case": "error",
     },
   },
 ];
