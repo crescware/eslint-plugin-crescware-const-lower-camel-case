@@ -14,8 +14,10 @@ Every identifier introduced by a `const` declaration must be lowerCamelCase:
 - No two consecutive uppercase letters: acronyms are treated as words, so
   `getUrl` / `userId` are required, not `getURL` / `userID`.
 - Single characters (`x`) are allowed.
-- Underscores, a leading `$`, PascalCase (`MyConst`) and UPPER_CASE (`ANSWER`)
-  are rejected.
+- A single trailing `$` is allowed (`form$`, `courseCategories$`) for
+  valibot-style schema variables.
+- Underscores, a leading `$`, a `$` in the middle (`foo$bar`), consecutive `$`
+  (`foo$$`), PascalCase (`MyConst`) and UPPER_CASE (`ANSWER`) are rejected.
 
 ### What is checked
 
